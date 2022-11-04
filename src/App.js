@@ -7,7 +7,10 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+  const [likes, setLikes] = useState(0)
   useEffect(() => {
     blogService.getAll().then(blogs => { 
       console.log(blogs);
@@ -20,8 +23,7 @@ const App = () => {
     if(loggedUserJSON){
       const user = JSON.parse(loggedUserJSON) 
       setUser(user)
-      // save to localStorage 
-      
+      blogService.setToken(user.token)
     }
   },[])
 
@@ -39,6 +41,7 @@ const App = () => {
           JSON.stringify(user)
         )
         setUser(user)
+        blogService.setToken(user.token)
         setUsername('')
         setPassword('')
       }
@@ -50,6 +53,19 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
+  }
+
+  const addBlog = async (evt) => {
+    evt.preventDefault()
+    const createdBlog = await blogService.create({title, author, url, likes})
+    console.log(createdBlog)
+    const updatedBlogs = blogs.concat(createdBlog)
+    setBlogs(updatedBlogs)
+    console.log(title, author, url)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+    setLikes('')
   }
 
   if(user === null) {
@@ -75,6 +91,22 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <p>{user.name} logged in</p> <button onClick={handleLogout}>logout</button>
+      <h2>create new</h2>
+      <form onSubmit={addBlog}>
+        <div>
+          title <input type="text" name="Title" value={title} onChange={ ({target}) => setTitle(target.value)} />
+        </div>
+        <div>
+          author <input type="text" name="Author" value={author} onChange={ ({target}) => setAuthor(target.value)} />
+        </div>
+        <div>
+          url <input type="url" name="Url" value={url} onChange={ ({target}) => setUrl(target.value)} />
+        </div>
+        <div> 
+          likes <input type="number" name="Likes" value={likes} onChange={({target}) => setLikes(target.value)} />
+        </div>
+        <button type="submit">create</button>
+      </form>
       { blogsOfLoggedInUser }
     </div>
   )
