@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import noteService from './services/login'
 const App = () => {
@@ -7,6 +8,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [message, setMessage] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -41,18 +43,33 @@ const App = () => {
           JSON.stringify(user)
         )
         setUser(user)
+        setMessage({
+          class: 'success',
+          content: 'Successfully logged in'
+        })
+        setTimeout(()=> setMessage(null), 3000)
         blogService.setToken(user.token)
         setUsername('')
         setPassword('')
       }
     }catch(exception){
       console.log('wrong credentials')
+      setMessage({
+        class: 'error',
+       content: 'wrong username or password'
+      })
+      setTimeout(()=> setMessage(null), 5000)
     } 
   }
  
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
+    setMessage({
+      class: 'success',
+      content: 'successfully logged out'
+    })
+    setTimeout(()=> setMessage(null), 5000)
   }
 
   const addBlog = async (evt) => {
@@ -61,7 +78,11 @@ const App = () => {
     console.log(createdBlog)
     const updatedBlogs = blogs.concat(createdBlog)
     setBlogs(updatedBlogs)
-    console.log(title, author, url)
+    setMessage({
+      class: 'success',
+     content: `a new blog ${title} by ${author} added`
+    })  
+    setTimeout(()=> setMessage(null), 5000)
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -72,6 +93,7 @@ const App = () => {
     return (
       <div>
         <h2>login to view blogs</h2>
+        <Notification message={message} />
         <form onSubmit={handleLogin}>
           <div>
           Username <input type="text" value={username} name="Username" onChange={({target}) => setUsername(target.value)}/>
@@ -90,6 +112,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} />
       <p>{user.name} logged in</p> <button onClick={handleLogout}>logout</button>
       <h2>create new</h2>
       <form onSubmit={addBlog}>
