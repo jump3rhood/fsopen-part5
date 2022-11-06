@@ -99,7 +99,9 @@ const App = () => {
   }
   const blogsOfLoggedInUser = blogs
     .filter( blog => blog.user.username === user.username)
-    .map( (b,index) => <Blog key={index} blog={b}/> )
+    .map( (b,index) => {
+    return <Blog key={index} blog={b}/> 
+  })
   
   return (
     <div>
