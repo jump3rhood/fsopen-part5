@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Toggable from './components/Toggable'
 import blogService from './services/blogs'
 import noteService from './services/login'
 const App = () => {
+
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [likes, setLikes] = useState(0)
 
   useEffect(() => {
     blogService.getAll().then(blogs => { 
@@ -70,20 +68,16 @@ const App = () => {
     setTimeout(()=> setMessage(null), 5000)
   }
 
-  const addBlog = async (evt) => {
-    evt.preventDefault()
-    const createdBlog = await blogService.create({title, author, url, likes})
+  const addBlog = async (blogObj) => {
+    const createdBlog = await blogService.create(blogObj)
     const updatedBlogs = blogs.concat(createdBlog)
     setBlogs(updatedBlogs)
+    const { title, author } = createdBlog
     setMessage({
       class: 'success',
      content: `a new blog ${title} by ${author} added`
     })  
     setTimeout(()=> setMessage(null), 5000)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setLikes('')
   }
 
   if(user === null) {
@@ -106,30 +100,25 @@ const App = () => {
   const blogsOfLoggedInUser = blogs
     .filter( blog => blog.user.username === user.username)
     .map( (b,index) => <Blog key={index} blog={b}/> )
+  
   return (
     <div>
       <h2>blogs</h2>
       <Notification message={message} />
-      <p>{user.name} logged in</p> <button onClick={handleLogout}>logout</button>
+      <div>
+        <p>{user.name} logged in</p> 
+        <button onClick={handleLogout}>logout</button>
+      </div>
+      <br/>
       <Toggable buttonLabel='create new'>
         <h2>create new</h2>
-        <form onSubmit={addBlog}>
-          <div>
-            title <input type="text" name="Title" value={title} onChange={ ({target}) => setTitle(target.value)} />
-          </div>
-          <div>
-            author <input type="text" name="Author" value={author} onChange={ ({target}) => setAuthor(target.value)} />
-          </div>
-          <div>
-            url <input type="url" name="Url" value={url} onChange={ ({target}) => setUrl(target.value)} />
-          </div>
-          <div> 
-            likes <input type="number" name="Likes" value={likes} onChange={({target}) => setLikes(target.value)} />
-          </div>
-          <button type="submit">create</button>
-        </form>
+        <BlogForm createBlog={addBlog} />
       </Toggable>
-      { blogsOfLoggedInUser }
+      <br/>
+      <div>
+        <h3>My list of blogs</h3>
+        { blogsOfLoggedInUser } 
+      </div>
     </div>
   )
 }
