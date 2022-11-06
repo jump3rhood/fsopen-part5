@@ -105,6 +105,7 @@ const App = () => {
   }
   const blogsOfLoggedInUser = blogs
     .filter( blog => blog.user.username === user.username)
+    .sort((a,b) => b.likes - a.likes)
     .map( (b,index) => {
     return <Blog key={index} blog={b} updateBlog={updateBlog}/> 
   })
