@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Toggable from './components/Toggable'
 import blogService from './services/blogs'
 import noteService from './services/login'
 const App = () => {
@@ -13,9 +14,9 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [likes, setLikes] = useState(0)
+
   useEffect(() => {
     blogService.getAll().then(blogs => { 
-      console.log(blogs);
       setBlogs(blogs)
     })
   }, [])
@@ -31,8 +32,6 @@ const App = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    console.log(username)
-    console.log(password)
     try{
       const user = await noteService.login({
         username, password
@@ -53,10 +52,9 @@ const App = () => {
         setPassword('')
       }
     }catch(exception){
-      console.log('wrong credentials')
       setMessage({
         class: 'error',
-       content: 'wrong username or password'
+        content: 'wrong username or password'
       })
       setTimeout(()=> setMessage(null), 5000)
     } 
@@ -75,7 +73,6 @@ const App = () => {
   const addBlog = async (evt) => {
     evt.preventDefault()
     const createdBlog = await blogService.create({title, author, url, likes})
-    console.log(createdBlog)
     const updatedBlogs = blogs.concat(createdBlog)
     setBlogs(updatedBlogs)
     setMessage({
@@ -114,22 +111,24 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={message} />
       <p>{user.name} logged in</p> <button onClick={handleLogout}>logout</button>
-      <h2>create new</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title <input type="text" name="Title" value={title} onChange={ ({target}) => setTitle(target.value)} />
-        </div>
-        <div>
-          author <input type="text" name="Author" value={author} onChange={ ({target}) => setAuthor(target.value)} />
-        </div>
-        <div>
-          url <input type="url" name="Url" value={url} onChange={ ({target}) => setUrl(target.value)} />
-        </div>
-        <div> 
-          likes <input type="number" name="Likes" value={likes} onChange={({target}) => setLikes(target.value)} />
-        </div>
-        <button type="submit">create</button>
-      </form>
+      <Toggable buttonLabel='create new'>
+        <h2>create new</h2>
+        <form onSubmit={addBlog}>
+          <div>
+            title <input type="text" name="Title" value={title} onChange={ ({target}) => setTitle(target.value)} />
+          </div>
+          <div>
+            author <input type="text" name="Author" value={author} onChange={ ({target}) => setAuthor(target.value)} />
+          </div>
+          <div>
+            url <input type="url" name="Url" value={url} onChange={ ({target}) => setUrl(target.value)} />
+          </div>
+          <div> 
+            likes <input type="number" name="Likes" value={likes} onChange={({target}) => setLikes(target.value)} />
+          </div>
+          <button type="submit">create</button>
+        </form>
+      </Toggable>
       { blogsOfLoggedInUser }
     </div>
   )
