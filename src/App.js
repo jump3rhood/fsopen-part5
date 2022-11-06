@@ -80,6 +80,12 @@ const App = () => {
     setTimeout(()=> setMessage(null), 5000)
   }
 
+  const updateBlog = async (id, blogObj) => {
+    const updatedBlog = await blogService.update(id, blogObj)
+    const otherBlogs = blogs.filter(b => b.id !== id)
+    setBlogs([...otherBlogs, updatedBlog])
+  }
+
   if(user === null) {
     return (
       <div>
@@ -100,7 +106,7 @@ const App = () => {
   const blogsOfLoggedInUser = blogs
     .filter( blog => blog.user.username === user.username)
     .map( (b,index) => {
-    return <Blog key={index} blog={b}/> 
+    return <Blog key={index} blog={b} updateBlog={updateBlog}/> 
   })
   
   return (
@@ -124,6 +130,5 @@ const App = () => {
     </div>
   )
 }
-
 
 export default App;
