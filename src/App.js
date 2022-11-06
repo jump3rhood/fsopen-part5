@@ -86,6 +86,27 @@ const App = () => {
     setBlogs([...otherBlogs, updatedBlog])
   }
 
+  const deleteBlog = async (blog) => {
+    const confirm = window.confirm(`Remove ${blog.title} by ${blog.author}?`)
+    if(confirm){
+      try{
+        await blogService.deleteOne(blog.id)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+        setMessage({
+          class: 'success',
+          content: `deleted ${blog.title}` 
+        })
+        setTimeout(()=>setMessage(null), 4000)
+      }
+      catch(exception){
+        setMessage({
+          class: 'error',
+          content: exception.message
+        })
+        setTimeout(()=>setMessage(null), 4000)
+      }
+    }
+  }
   if(user === null) {
     return (
       <div>
@@ -103,11 +124,11 @@ const App = () => {
       </div>
     )
   }
-  const blogsOfLoggedInUser = blogs
-    .filter( blog => blog.user.username === user.username)
+  const blogstoRender = blogs
+    // .filter( blog => blog.user.username === user.username)
     .sort((a,b) => b.likes - a.likes)
     .map( (b,index) => {
-    return <Blog key={index} blog={b} updateBlog={updateBlog}/> 
+    return <Blog key={index} user={user} blog={b} updateBlog={updateBlog} deleteBlog={deleteBlog}/> 
   })
   
   return (
@@ -126,7 +147,7 @@ const App = () => {
       <br/>
       <div>
         <h3>My list of blogs</h3>
-        { blogsOfLoggedInUser } 
+        { blogstoRender } 
       </div>
     </div>
   )
