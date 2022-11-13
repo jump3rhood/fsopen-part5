@@ -1,8 +1,9 @@
+// eslint-disable-next-line no-dupe-else-if
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-const Toggable = (props) => {
+const Togglable = (props) => {
   const [visible, setVisible] = useState(false)
-  
+
   const hideWhenVisible =  { display: visible ? 'none':  '' }
   const showWhenVisible = { display : visible ? '': 'none' }
 
@@ -25,4 +26,4 @@ Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired
 }
 Togglable.displayName = 'Togglable'
-export default Toggable
+export default Togglable
