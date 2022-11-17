@@ -4,8 +4,9 @@ import { screen, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
-describe('<Blog />', () => {
+describe('<Blog /> ', () => {
   let container
+  const likesUpdateMocker = jest.fn()
   beforeEach(() => {
     const blog = {
       title: 'Dummy Blog',
@@ -13,7 +14,7 @@ describe('<Blog />', () => {
       url: 'https://url.com/',
       likes: 55
     }
-    container = render(<Blog blog={blog}/>).container
+    container = render(<Blog blog={blog} updateBlog={likesUpdateMocker}/>).container
   })
   test('renders correctly', () => {
 
@@ -32,7 +33,7 @@ describe('<Blog />', () => {
     expect(likesElement.parentNode).toHaveStyle('display: none')
   })
 
-  test('<Blog /> shows url and likes when show button is clicked', async () => {
+  test('shows url and likes when show button is clicked', async () => {
     const showButton = screen.getByText('view')
     const likesBefore = screen.getByText(55)
 
@@ -46,5 +47,19 @@ describe('<Blog />', () => {
     expect(likesAfter).toBeDefined()
     expect(likesAfter).toHaveTextContent(55)
     expect(url.parentNode).not.toHaveStyle('display:none')
+  })
+
+  test('likes button works as expected', async () => {
+    const user = userEvent.setup()
+    const show = screen.getByText('view')
+    await user.click(show)
+
+    const likeButton = screen.getByText('like')
+    expect(likeButton).toBeDefined()
+
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(likesUpdateMocker.mock.calls).toHaveLength(2)
   })
 })
