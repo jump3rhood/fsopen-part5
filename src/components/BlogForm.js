@@ -18,16 +18,16 @@ const BlogForm = ({ createBlog }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-            title <input type="text" name="Title" value={title} onChange={ ({ target }) => setTitle(target.value)} />
+            title <input type="text" name="Title" placeholder='title' value={title} onChange={ ({ target }) => setTitle(target.value)} />
       </div>
       <div>
-            author <input type="text" name="Author" value={author} onChange={ ({ target }) => setAuthor(target.value)} />
+            author <input type="text" name="Author" placeholder='author' value={author} onChange={ ({ target }) => setAuthor(target.value)} />
       </div>
       <div>
-            url <input type="url" name="Url" value={url} onChange={ ({ target }) => setUrl(target.value)} />
+            url <input type="url" name="Url" value={url} placeholder='url' onChange={ ({ target }) => setUrl(target.value)} />
       </div>
       <div>
-            likes <input type="number" name="Likes" value={likes} onChange={({ target }) => setLikes(target.value)} />
+            likes <input type="number" name="Likes" value={likes} placeholder='likes' onChange={({ target }) => setLikes(target.value)} />
       </div>
       <button type="submit">create</button>
     </form>
