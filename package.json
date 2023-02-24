@@ -15,7 +15,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "lint --fix": "eslint . --fix"
+    "lint --fix": "eslint . --fix",
+    "cy:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -37,9 +38,11 @@
   },
   "proxy": "http://localhost:3003/",
   "devDependencies": {
-    "prop-types": "^15.8.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.1.1"
+    "@testing-library/user-event": "^14.1.1",
+    "cypress": "^12.6.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "prop-types": "^15.8.1"
   }
 }

@@ -35,6 +35,7 @@ const App = () => {
         username, password
       })
       if(user){
+        console.log(user)
         // save to localStorage
         window.localStorage.setItem('loggedBlogappUser',
           JSON.stringify(user)
@@ -114,12 +115,12 @@ const App = () => {
         <Notification message={message} />
         <form onSubmit={handleLogin}>
           <div>
-          Username <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)}/>
+          Username <input type="text" id='username' value={username} name="Username" onChange={({ target }) => setUsername(target.value)}/>
           </div>
           <div>
-          Password <input type="password" value={password} name="Password" onChange={({ target }) => setPassword(target.value)}/>
+          Password <input type="password" id='password' value={password} name="Password" onChange={({ target }) => setPassword(target.value)}/>
           </div>
-          <button type="submit">login</button>
+          <button type="submit" id='login-button'>login</button>
         </form>
       </div>
     )
