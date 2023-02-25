@@ -14,15 +14,18 @@ const App = () => {
   const [message, setMessage] = useState(null)
 
   useEffect(() => {
+    console.log('1st useeffect')
     blogService.getAll().then(blogs => {
       setBlogs(blogs)
     })
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    console.log('2nd useeffect')
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if(loggedUserJSON){
       const user = JSON.parse(loggedUserJSON)
+      console.log(user)
       setUser(user)
       blogService.setToken(user.token)
     }
@@ -35,9 +38,8 @@ const App = () => {
         username, password
       })
       if(user){
-        console.log(user)
         // save to localStorage
-        window.localStorage.setItem('loggedBlogappUser',
+        window.localStorage.setItem('loggedBlogAppUser',
           JSON.stringify(user)
         )
         setUser(user)
@@ -60,7 +62,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogappUser')
+    window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
     setMessage({
       class: 'success',
@@ -100,9 +102,10 @@ const App = () => {
         setTimeout(() => setMessage(null), 4000)
       }
       catch(exception){
+        console.log(exception)
         setMessage({
           class: 'error',
-          content: exception.message
+          content: exception.response.data.error
         })
         setTimeout(() => setMessage(null), 4000)
       }
@@ -141,7 +144,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </div>
       <br/>
-      <Toggable buttonLabel='create new'>
+      <Toggable buttonLabel='Blog Form'>
         <h2>create new</h2>
         <BlogForm createBlog={addBlog} />
       </Toggable>

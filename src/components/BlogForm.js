@@ -16,20 +16,20 @@ const BlogForm = ({ createBlog }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id="blog-form">
       <div>
-            title <input type="text" name="Title" placeholder='title' value={title} onChange={ ({ target }) => setTitle(target.value)} />
+            title <input placeholder='title' id='title' value={title} onChange={ ({ target }) => setTitle(target.value)} />
       </div>
       <div>
-            author <input type="text" name="Author" placeholder='author' value={author} onChange={ ({ target }) => setAuthor(target.value)} />
+            author <input placeholder='author' id="author" value={author} onChange={ ({ target }) => setAuthor(target.value)} />
       </div>
       <div>
-            url <input type="url" name="Url" value={url} placeholder='url' onChange={ ({ target }) => setUrl(target.value)} />
+            url <input type="url" value={url} placeholder='url' id="url" onChange={ ({ target }) => setUrl(target.value)} />
       </div>
       <div>
-            likes <input type="number" name="Likes" value={likes} placeholder='likes' onChange={({ target }) => setLikes(target.value)} />
+            likes <input type="number" id="likes" value={likes} placeholder='likes' onChange={({ target }) => setLikes(target.value)} />
       </div>
-      <button type="submit">create</button>
+      <button type="submit" id='create'>create</button>
     </form>
   )
 }

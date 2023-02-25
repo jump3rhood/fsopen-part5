@@ -16,6 +16,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
 
   const updateLikes = (id) => {
     const { title, author, url, likes } = blog
+    console.log(blog)
     updateBlog(id, { title, author, url, likes: likes+1 })
   }
 
@@ -31,9 +32,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
         <p className='url'>{blog.url}</p>
         <p className='likes'>{blog.likes} <button onClick={() => updateLikes(blog.id)}>like</button></p>
         <p>{blog.author}</p>
-        {/* { blog.user.username === user.username ?
-          <button onClick={() => deleteBlog(blog)}>remove</button> : ''
-        } */}
+        <button onClick={() => deleteBlog(blog)}>remove</button>
       </div>
     </div>
   )
