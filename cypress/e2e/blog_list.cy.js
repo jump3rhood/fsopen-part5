@@ -68,13 +68,30 @@ describe('Blog app', function(){
         cy.contains('some title').should('be.visible')
         cy.contains('some author').should('be.visible')
       })
-      it.only('a user can like a blog', function(){
+      it('a user can like a blog', function(){
         cy.get('#blogs-section').contains('Blog 1').parent().as('blog1')
         cy.get('@blog1').contains('view').click()
+
         cy.contains('Blog 1').parent().parent().as('fullView')
         cy.get('@fullView').contains(seedBlogs[0].likes)
         cy.get('@fullView').contains('like').click()
         cy.get('@fullView').contains(seedBlogs[0].likes+1)
+      })
+      it.only('user who created a blog can delete it', function(){
+        cy.get('#blogs-section')
+          .contains('Blog 1')
+          .parent()
+          .contains('view').click()
+        cy.get('#blogs-section')
+          .contains('Blog 1')
+          .parent().parent().as('fullView')
+        cy.get('@fullView')
+          .contains('remove')
+          .click()
+        cy.on('window.confirm', () => true)
+
+        cy.contains(`deleted ${seedBlogs[0].title}`)
+        cy.get('html').should('not.contain', 'Blog 1')
       })
     })
 
