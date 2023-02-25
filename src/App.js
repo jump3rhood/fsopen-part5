@@ -151,7 +151,9 @@ const App = () => {
       <br/>
       <div>
         <h3>My list of blogs</h3>
-        { blogstoRender }
+        <div id="blogs-section">
+          { blogstoRender }
+        </div>
       </div>
     </div>
   )

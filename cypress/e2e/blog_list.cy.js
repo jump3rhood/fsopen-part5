@@ -56,7 +56,7 @@ describe('Blog app', function(){
         cy.createBlog(seedBlogs[1])
       })
 
-      it.only('a new blog can be added', function(){
+      it('a new blog can be added', function(){
         cy.get('#btn-label').click()
 
         cy.get('form').should('be.visible').as('blogForm')
@@ -67,6 +67,14 @@ describe('Blog app', function(){
 
         cy.contains('some title').should('be.visible')
         cy.contains('some author').should('be.visible')
+      })
+      it.only('a user can like a blog', function(){
+        cy.get('#blogs-section').contains('Blog 1').parent().as('blog1')
+        cy.get('@blog1').contains('view').click()
+        cy.contains('Blog 1').parent().parent().as('fullView')
+        cy.get('@fullView').contains(seedBlogs[0].likes)
+        cy.get('@fullView').contains('like').click()
+        cy.get('@fullView').contains(seedBlogs[0].likes+1)
       })
     })
 
