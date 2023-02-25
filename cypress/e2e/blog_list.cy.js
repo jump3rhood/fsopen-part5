@@ -106,6 +106,11 @@ describe('Blog app', function(){
         cy.contains('John\'s blog').parent().contains('view').click()
         cy.contains('John\'s blog').parent().parent().should('not.contain', 'remove')
       })
+      it('Blogs are ordered according to likes', function(){
+        cy.get('.blog').eq(0).should('contain', 'John\'s blog') //1400 likes
+        cy.get('.blog').eq(1).should('contain', 'Blog 1') // 23 likes
+      })
+
     })
 
   })
