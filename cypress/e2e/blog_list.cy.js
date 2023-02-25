@@ -6,7 +6,7 @@ const seedBlogs = [
     likes: 23,
   },
   {
-    title: 'Blog 2',
+    title: 'John\'s blog',
     author: 'Author 2',
     url: 'http://url2',
     likes: 1400
@@ -24,12 +24,18 @@ describe('Blog app', function(){
   })
   describe('login', function(){
     beforeEach(function(){
-      const user = {
+      const user1 = {
         username: 'root',
         password: 'root',
         name: 'root'
       }
-      cy.request('POST', 'http://localhost:3003/api/users', user)
+      const user2 = {
+        username: 'John Smith',
+        name: 'john',
+        password: 'john'
+      }
+      cy.request('POST', 'http://localhost:3003/api/users', user1)
+      cy.request('POST', 'http://localhost:3003/api/users', user2)
       cy.visit('http://localhost:3000')
     })
     it('succeeds with correct credentials', function(){
@@ -51,9 +57,11 @@ describe('Blog app', function(){
 
     describe('When logged in', function(){
       beforeEach(function(){
+        cy.login({ username: 'John Smith', password: 'john' })
+        cy.createBlog(seedBlogs[1])
+        cy.contains('logout').click()
         cy.login({ username: 'root', password: 'root' })
         cy.createBlog(seedBlogs[0])
-        cy.createBlog(seedBlogs[1])
       })
 
       it('a new blog can be added', function(){
@@ -77,7 +85,7 @@ describe('Blog app', function(){
         cy.get('@fullView').contains('like').click()
         cy.get('@fullView').contains(seedBlogs[0].likes+1)
       })
-      it.only('user who created a blog can delete it', function(){
+      it('user who created a blog can delete it', function(){
         cy.get('#blogs-section')
           .contains('Blog 1')
           .parent()
@@ -92,6 +100,11 @@ describe('Blog app', function(){
 
         cy.contains(`deleted ${seedBlogs[0].title}`)
         cy.get('html').should('not.contain', 'Blog 1')
+      })
+      it('other users except the creator cannot see the remove button', function(){
+        cy.contains('root logged in')
+        cy.contains('John\'s blog').parent().contains('view').click()
+        cy.contains('John\'s blog').parent().parent().should('not.contain', 'remove')
       })
     })
 

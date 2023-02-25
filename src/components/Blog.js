@@ -5,7 +5,8 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const hideWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => setVisible(!visible)
-
+  console.log(user)
+  console.log(blog)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -33,7 +34,10 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
         <p className='url'>{blog.url}</p>
         <p className='likes'>{blog.likes} <button onClick={() => updateLikes(blog.id)}>like</button></p>
         <p>{blog.author}</p>
-        <button onClick={() => deleteBlog(blog)}>remove</button>
+        {user.name !== blog.user.name
+          ? ''
+          : <button onClick={() => deleteBlog(blog)}>remove</button>
+        }
       </div>
     </div>
   )
